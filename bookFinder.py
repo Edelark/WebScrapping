@@ -1,8 +1,7 @@
 '''Autor: Antoni Cobos 
    GitHub: https://github.com/Edelark'''
-
-import bs4 as bs
-import urllib
+from bs4 import BeautifulSoup
+import requests
 def find(book):
     url = url_generator(book) #get the casa del libro's url 
     html = web_scrapping(url) #webscrapping to these url
@@ -13,13 +12,11 @@ def find(book):
     page = web_scrapping(url_complete)#get the book page's html
     theme = page.find(class_='expmat').a.text
     title = page.find(class_="book-header-2-title").text
-    isbn = page.find(class_="book-header-2-subtitle-isbn").text
     pos_isbn = title.find('ISBN')
     title = title[:pos_isbn].strip()
     description = page.find(class_='acortar').text
     print("Title -> "+title)
     print("Theme -> "+theme)
-    print(isbn)
     print("Description -> "+description)
     
     
@@ -34,5 +31,5 @@ def url_generator(book): #finder's url
     +str1+"&nivel=5")
     
 def web_scrapping(url):#extract the html 
-    sauce = urllib.urlopen(url).read()
-    return bs.BeautifulSoup(sauce, 'lxml')
+    request = requests.get(url)
+    return BeautifulSoup(request.text, "html.parser")
